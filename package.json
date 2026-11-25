@@ -1,0 +1,15 @@
+{
+  "name": "rigcheck",
+  "version": "1.0.0",
+  "description": "Broadcast-grade local studio & PC readiness monitor for OBS/vMix podcast rigs",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "obs-websocket-js": "^5.0.6",
+    "systeminformation": "^5.33.24"
+  }
+}

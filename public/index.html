@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RigCheck — Studio Readiness Console</title>
+  <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- TOP COMMAND BAR: Switcher Toggle + Switcher Status + View Mode -->
+    <header class="command-bar">
+      <div class="brand-block">
+        <svg id="brand-icon" class="brand-icon" viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="27" fill="#0b111a" stroke="currentColor" stroke-width="4" />
+          <circle cx="32" cy="9" r="3.5" fill="currentColor" />
+          <rect x="21" y="26" width="6" height="22" rx="2" fill="currentColor" opacity="0.9" />
+          <rect x="30" y="18" width="6" height="30" rx="2" fill="currentColor" />
+          <rect x="39" y="31" width="6" height="17" rx="2" fill="currentColor" opacity="0.75" />
+        </svg>
+        <div>
+          <h1>RigCheck</h1>
+          <span class="subtitle">Broadcast Studio Telemetry</span>
+        </div>
+      </div>
+
+      <div class="switcher-control">
+        <span class="control-label">ACTIVE SWITCHER</span>
+        <div class="segmented-toggle" role="group" aria-label="Active Switcher">
+          <button id="btn-obs" class="seg-btn active" data-mode="obs">OBS</button>
+          <button id="btn-vmix" class="seg-btn" data-mode="vmix">vMix</button>
+        </div>
+        <span id="switcher-badge" class="status-pill not-ready">NOT READY</span>
+      </div>
+
+      <div class="demo-control">
+        <label for="demo-mode" class="control-label">VIEW MODE</label>
+        <select id="demo-mode" class="mode-select">
+          <option value="live">Live Telemetry</option>
+          <option value="demo-ready">Demo: All Ready</option>
+          <option value="demo-fault">Demo: Fault State</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- OVERALL GO / NO-GO BANNER -->
+    <section id="overall-banner" class="overall-banner not-ready">
+      <div class="overall-left">
+        <span class="pulse-dot"></span>
+        <div>
+          <div class="overall-eyebrow">OVERALL STUDIO STATUS</div>
+          <div id="overall-verdict" class="overall-verdict">NOT READY</div>
+        </div>
+      </div>
+      <div id="overall-details" class="overall-details">
+        Connecting to local RigCheck telemetry daemon...
+      </div>
+      <div class="overall-meta">
+        <span id="switcher-telemetry" class="meta-chip">OBS: Initializing</span>
+        <span id="last-sync" class="meta-time">SYNC --:--:--</span>
+      </div>
+    </section>
+
+    <!-- STUDIO GEAR GRID (Uniform READY / NOT READY Cards) -->
+    <section class="section-grid">
+      <article class="card" id="card-rodecaster">
+        <div class="card-header">
+          <div>
+            <h2>RØDECaster Pro</h2>
+            <span class="card-sub">Audio Console &amp; USB Interface</span>
+          </div>
+          <span id="badge-rodecaster" class="status-pill not-ready">NOT READY</span>
+        </div>
+        <div id="detail-rodecaster" class="card-body-text">Scanning audio bus...</div>
+      </article>
+
+      <article class="card" id="card-docks">
+        <div class="card-header">
+          <div>
+            <h2>Custom OBS Docks</h2>
+            <span class="card-sub">Local Overlay &amp; Control Endpoints</span>
+          </div>
+          <span id="badge-docks" class="status-pill not-ready">NOT READY</span>
+        </div>
+        <ul id="list-docks" class="dock-list"></ul>
+      </article>
+
+      <article class="card" id="card-streamdeck">
+        <div class="card-header">
+          <div>
+            <h2>Stream Deck</h2>
+            <span class="card-sub">Hardware Control Surface</span>
+          </div>
+          <span id="badge-streamdeck" class="status-pill not-ready">NOT READY</span>
+        </div>
+        <div id="detail-streamdeck" class="card-body-text">Checking StreamDeck.exe...</div>
+      </article>
+    </section>
+
+    <!-- BOTTOM SPLIT: PC HEALTH + PORT/PROCESS INSPECTOR -->
+    <section class="bottom-split">
+      <article class="card pc-card">
+        <div class="card-header">
+          <div>
+            <h2>Studio PC Health</h2>
+            <span class="card-sub">Low-Overhead System Telemetry</span>
+          </div>
+          <span id="pc-gpu-name" class="meta-chip">GPU: Detecting...</span>
+        </div>
+
+        <div class="meter-stack">
+          <div class="meter-row">
+            <div class="meter-label">
+              <span>CPU Load</span>
+              <strong id="val-cpu">0%</strong>
+            </div>
+            <div class="meter-track"><div id="bar-cpu" class="meter-fill"></div></div>
+          </div>
+
+          <div class="meter-row">
+            <div class="meter-label">
+              <span>Memory (RAM)</span>
+              <strong id="val-ram">0%</strong>
+            </div>
+            <div class="meter-track"><div id="bar-ram" class="meter-fill"></div></div>
+          </div>
+
+          <div class="meter-row">
+            <div class="meter-label">
+              <span>GPU Utilization</span>
+              <strong id="val-gpu">N/A</strong>
+            </div>
+            <div class="meter-track"><div id="bar-gpu" class="meter-fill"></div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card ports-card">
+        <div class="card-header">
+          <div>
+            <h2>Port &amp; Process Inspector</h2>
+            <span class="card-sub">Active Local Listening Sockets</span>
+          </div>
+          <div class="port-controls">
+            <input id="port-search" type="text" placeholder="Filter port or process..." />
+            <button id="btn-port-scope" class="scope-btn" data-scope="studio">Studio Ports</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Port</th>
+                <th>Proto</th>
+                <th>PID</th>
+                <th>Process</th>
+                <th>Bind</th>
+              </tr>
+            </thead>
+            <tbody id="ports-tbody"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

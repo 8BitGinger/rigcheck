@@ -1,0 +1,54 @@
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 3100
+  },
+  "activeSwitcher": "obs",
+  "obs": {
+    "url": "ws://127.0.0.1:4455",
+    "password": "",
+    "processName": "obs64.exe"
+  },
+  "vmix": {
+    "url": "http://127.0.0.1:8088/api/",
+    "processName": "vMix64.exe"
+  },
+  "rodecaster": {
+    "matchKeywords": [
+      "rodecaster",
+      "rode"
+    ],
+    "displayName": "RØDECaster Pro"
+  },
+  "streamDeck": {
+    "processName": "StreamDeck.exe",
+    "requireListeningPort": false
+  },
+  "customDocks": [
+    {
+      "name": "Lower Thirds / FX Dock",
+      "type": "http",
+      "url": "http://127.0.0.1:8090",
+      "timeoutMs": 1200
+    },
+    {
+      "name": "Show Timer Dock",
+      "type": "tcp",
+      "host": "127.0.0.1",
+      "port": 8091,
+      "timeoutMs": 1200
+    }
+  ],
+  "studioHighlightPorts": [
+    4455,
+    8088,
+    8090,
+    8091,
+    3100
+  ],
+  "polling": {
+    "fastMs": 2500,
+    "mediumMs": 5000,
+    "slowMs": 8000
+  }
+}
